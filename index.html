@@ -5,8 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GifTastic:Animals</title>
+    <style type="text/css">
+    /* this style will a space of ten px */
+        button,
+        div,
+        form,
+        input {
+          margin: 10px;
+        }
+      </style>
 </head>
 <body>
-    
+    <!-- this is where im going to place the title -->
+    <h1></h1>
+    <!-- this is where pre-made buttons go -->
+    <div id="buttons-view"></div>
+    <!-- Animal Gif button add -->
+    <form>
+        <label for="Animal input">Add Other Animals</label>
+        <input type="text" id="Animal input">
+        <br>
+        <!-- button to triger a new Anuimal to be added -->
+        <input id="add-animal" type="submit" value="Let's Make a Zoo">
+    </form>
+    <div id="animal-gif"></div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script type="text/javascript"> 
+        
+         // Initial array of animals
+      var animal = ["Cat", "Dog", "Birds", "Bunny"];
+
+      // Generic function for capturing the movie name from the data-attribute
+      function Animal() {
+        $("button").on("click", function() {
+      var animal = $(this).attr("Animal input");
+      var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=99gXmEwJYPsNXE05p5w7G4J0rX6D8FdO&q=" +
+        animal + "&limit=25&offset=0&rating=G&lang=en";
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+       // After the data from the AJAX request comes back
+        .then(function(response) {
+
+          // Saving the image_original_url property
+          var queryUrl = response.data.image_original_url;
+
+          // Creating and storing an image tag
+          var image = $("<img>");
+
+          // Setting the catImage src attribute to imageUrl
+          image.attr("src", imageUrl);
+          image.attr("alt", "cat image");
+
+          // Prepending the catImage to the images div
+          $("#animal-gif").prepend(image);
+        });
+    });
+      }
+
+      // Function for displaying movie data
+      function renderButtons() {
+
+        // Deleting the movies prior to adding new movies
+        // (this is necessary otherwise we will have repeat buttons)
+        $("#buttons-view").empty();
+
+        // Looping through the array of movies
+        for (var i = 0; i < animal.length; i++) {
+
+          // Then dynamicaly generating buttons for each movie in the array
+          // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
+          var a = $("<button>");
+          // Adding a class of movie to our button
+          a.addClass("animal-btn");
+          // Adding a data-attribute
+          a.attr("data-name", animal[i]);
+          // Providing the initial button text
+          a.text(animal[i]);
+          // Adding the button to the HTML
+          $("#buttons-view").append(a);
+        }
+      }
+      
+
+      // This function handles events where one button is clicked
+      $("#add-animal").on("click", function(event) {
+        // Preventing the buttons default behavior when clicked (which is submitting a form)
+        event.preventDefault();
+        // This line grabs the input from the textbox
+        var animal = $("#Animal input").val().trim();
+
+        // Adding the movie from the textbox to our array
+        animals.push(animal);
+
+        // Calling renderButtons which handles the processing of our movie array
+        renderButtons();
+
+      });
+
+       // Adding a click event listener to all elements with a class of "movie-btn"
+       $(document).on("click", ".animal-btn", animal);
+
+      // Calling the renderButtons function to display the intial buttons
+      renderButtons();
+
+        </script>
+    </div>
 </body>
+
+
 </html>
